@@ -614,11 +614,15 @@ function startAuto() {
 
 function showMode(mode) {
   activeMode = mode;
-  const patternNodes = [document.querySelector('.main'), document.querySelector('.status')];
-  patternNodes.forEach(el => { if (el) el.classList.toggle('hidden', mode === 'general'); });
-  E.generalView.classList.toggle('hidden', mode !== 'general');
+  const mainView = document.querySelector('.main');
+  const statusView = document.querySelector('.status');
+  if (mainView) mainView.style.display = mode === 'general' ? 'none' : 'grid';
+  if (statusView) statusView.style.display = mode === 'general' ? 'none' : 'block';
+  if (E.generalView) E.generalView.style.display = mode === 'general' ? 'block' : 'none';
+  if (E.generalView) E.generalView.classList.toggle('hidden', mode !== 'general');
   E.tabPattern.classList.toggle('active', mode === 'pattern');
   E.tabGeneral.classList.toggle('active', mode === 'general');
+  if (mode === 'general') window.scrollTo({ top: 0, behavior: 'smooth' });
   stopAuto();
   syncModeTag();
 }

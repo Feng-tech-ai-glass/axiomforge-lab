@@ -1,25 +1,29 @@
 # AxiomForge
 
+**A cognitive engine for invention, memory, and safe self-improvement.**
+
 **AI that does not just answer. It invents.**
 
-AxiomForge is a self-improving cognitive engine for invention.
+AxiomForge combines a small persistent DNA core with external large models to create a system that can propose ideas, test them, remember what works, and improve its own strategy over time.
 
-It combines a small persistent DNA core with external large models to create a system that can:
-- generate ideas
-- test them
-- remember what works
-- lock correct answers
-- allocate more effort to hard problems
-- improve its own strategy safely over time
+[Live Demo](./demo/ai_pattern_inventor_demo.html) | [Read the Docs](./STRUCTURE.md)
 
 ---
 
-## Why AxiomForge Exists
+## What It Does
 
-Most AI systems are optimized to respond.
-AxiomForge is optimized to discover.
+- **Invent** new ideas, patterns, and solutions
+- **Remember** what works and compress it into reusable rules
+- **Improve** safely through validation, rollback, and recursive self-updates
 
-> Use a small, stable cognitive DNA to drive large models as tools for invention.
+---
+
+## Demo
+
+- **AI Pattern Inventor** -- generates geometric patterns, evaluates beauty, and iterates toward stronger designs
+- **AI Universal Inventor** -- takes any problem, generates candidate solutions, scores them, and refines the best one
+
+Both modes use your own API key (OpenAI / DeepSeek / Anthropic). Your key stays in your browser. We never see it.
 
 ---
 
@@ -27,47 +31,24 @@ AxiomForge is optimized to discover.
 
 Seven core capabilities:
 
-- **World Model** - Predicts what will happen if the system takes an action
-- **Meta-Control** - Decides what to do next, what to explore, and when to stop
-- **Layered Memory** - Stores experience, compresses it into rules, uses it during decisions
-- **Abstraction Engine** - Discovers patterns, rule families, and general principles
-- **Answer Anchor** - Locks correct answers to prevent overthinking (Apple paper fix)
-- **Effort Scaler** - Spends more reasoning budget on harder problems
-- **Safe Self-Improvement** - Proposes changes, validates them, rolls back if needed
-
----
-
-## What It Can Do
-
-AxiomForge works as an invention engine across domains:
-
-- Inventing visual patterns
-- Generating and refining puzzles
-- Discovering experimental rules
-- Proposing cross-domain innovations
-- Improving its own control policy over time
-
-The loop: **observe -> propose -> test -> remember -> abstract -> improve**
-
----
-
-## Demo
-
-This repo includes visual demos showing the system inventing in real time.
-
-- **AI Pattern Inventor** - generates geometric patterns, evaluates beauty with math, iterates
-- **AI Puzzle Inventor** - creates 24-game puzzles, tests solvability, adjusts difficulty
+- **World Model** -- Predicts what will happen if the system takes an action
+- **Meta-Control** -- Decides what to do next, what to explore, and when to stop
+- **Layered Memory** -- Stores experience, compresses it into rules, uses it during decisions
+- **Abstraction Engine** -- Discovers patterns, rule families, and general principles
+- **Answer Anchor** -- Locks correct answers to prevent overthinking (Apple paper fix)
+- **Effort Scaler** -- Spends more reasoning budget on harder problems
+- **Safe Self-Improvement** -- Proposes changes, validates them, rolls back if needed
 
 ---
 
 ## Experimental Results
 
-- Discovered stable rules from 1750+ real experiments
-- 39.4% training efficiency improvement
-- Meta-controller achieved 100% autonomous takeover
-- Cross-domain transfer validated
-- Answer Anchor prevents overthinking (addresses Apple's "Illusion of Thinking" findings)
-- Self-evolution: system diagnoses its own weaknesses and proposes fixes
+- DNA provides **+29% absolute improvement** over random search (1915 experiments)
+- **35 rules** and **3 universal principles** discovered automatically
+- **39.4% training efficiency improvement**
+- Meta-controller achieved **100% autonomous takeover** with safe fallback
+- Cross-domain transfer validated across 2 domains
+- System diagnoses its own weaknesses and proposes fixes (recursive self-improvement)
 
 ---
 
@@ -78,11 +59,46 @@ This repo includes visual demos showing the system inventing in real time.
 - Memory affects decisions, not just storage
 - High confidence protected, not overwritten by noise
 - Hard problems receive more effort, not less
+- Good discoveries become reusable knowledge
+
+---
+
+## Open Core Approach
+
+Open:
+- Visual demos
+- Evaluation tools
+- Integration layers
+- Public examples
+
+Protected:
+- DNA core strategies
+- Training data
+- Self-improvement rules
+- Production weights
+
+---
+
+## Status
+
+AxiomForge is actively evolving.
+
+Current focus:
+- Long-term stability testing
+- Memory-to-decision integration
+- Cross-domain generalization
+- Safe recursive self-improvement
 
 ---
 
 ## Acknowledgements
 
-This project was inspired by [Andrej Karpathy](https://github.com/karpathy)'s AutoResearch and his vision of AI-driven experimental optimization. His work on the "Karpathy Loop" — letting AI automatically run experiments, evaluate results, and discover improvements — provided the foundational concept that we built our cognitive architecture upon.
+This project was inspired by [Andrej Karpathy](https://github.com/karpathy)'s AutoResearch and his vision of AI-driven experimental optimization. His work on the "Karpathy Loop" -- letting AI automatically run experiments, evaluate results, and discover improvements -- provided the foundational concept that we built our cognitive architecture upon.
 
-We extended the loop with world models, meta-control, layered memory, abstraction, answer anchoring, effort scaling, and safe self-improvement to create a system that doesn't just optimize — it invents.
+We extended the loop with world models, meta-control, layered memory, abstraction, answer anchoring, effort scaling, and safe self-improvement to create a system that doesn't just optimize -- it invents.
+
+---
+
+## License
+
+This project uses a hybrid open-core model. See LICENSE for details.
