@@ -1,4 +1,4 @@
-﻿# AxiomForge
+# AxiomForge
 
 **AI that does not just answer. It invents.**
 

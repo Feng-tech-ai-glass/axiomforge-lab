@@ -1,4 +1,4 @@
-﻿# AxiomForge Lab - Open Source Layer
+# AxiomForge Lab - Open Source Layer
 
 ## What is in this repo (SAFE to share)
 - Demo frontends (pattern inventor, puzzle inventor)
