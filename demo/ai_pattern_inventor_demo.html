@@ -1,0 +1,490 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Pattern Inventor Lab</title>
+<style>
+:root{--bg:#0a0a1a;--bg2:#070816;--panel:rgba(15,18,34,.86);--line:rgba(120,140,255,.16);--txt:#eff4ff;--mut:#aab6e7;--b:#66d9ff;--v:#9b7bff;--g:#4af2a0;--y:#ffd36a;--r:#ff6b8d;--gold:#ffcf6b;--shadow:0 0 28px rgba(102,217,255,.16),0 0 72px rgba(155,123,255,.10)}*{box-sizing:border-box}html,body{height:100%}body{margin:0;font:14px/1.5 Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--txt);background:radial-gradient(circle at 15% 15%,rgba(102,217,255,.12),transparent 18%),radial-gradient(circle at 86% 10%,rgba(155,123,255,.14),transparent 18%),radial-gradient(circle at 50% 82%,rgba(74,242,160,.06),transparent 22%),linear-gradient(180deg,var(--bg),var(--bg2));overflow-x:hidden}.grid{position:fixed;inset:0;pointer-events:none;opacity:.16;background:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(circle at center,black 28%,transparent 100%)}.orb{position:fixed;pointer-events:none;filter:blur(18px);border-radius:50%;animation:float 10s ease-in-out infinite}.orb.a{width:240px;height:240px;left:-60px;top:100px;background:rgba(102,217,255,.11)}.orb.b{width:320px;height:320px;right:-120px;top:30px;background:rgba(155,123,255,.10);animation-delay:-3s}.orb.c{width:260px;height:260px;left:28%;bottom:-120px;background:rgba(74,242,160,.07);animation-delay:-6s}.app{min-height:100vh;padding:16px;display:grid;grid-template-rows:auto 1fr auto;gap:16px;position:relative}.bar,.panel,.status{background:linear-gradient(180deg,rgba(28,33,57,.90),rgba(13,17,31,.82));border:1px solid rgba(120,140,255,.16);border-radius:20px;box-shadow:var(--shadow);backdrop-filter:blur(18px)}.bar{position:sticky;top:10px;z-index:30;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.brand{display:flex;gap:14px;align-items:center;min-width:0}.logo{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:24px;background:linear-gradient(135deg,rgba(102,217,255,.24),rgba(155,123,255,.24));border:1px solid rgba(102,217,255,.34);box-shadow:var(--shadow);flex:none}.brand h1{margin:0;font-size:18px}.brand .sub{color:var(--mut);font-size:12px}.live{display:inline-flex;align-items:center;gap:8px;margin-top:4px;padding:6px 10px;border-radius:999px;border:1px solid rgba(74,242,160,.28);background:rgba(11,17,28,.72);color:#d9ffec;font-size:12px;text-transform:uppercase;letter-spacing:.8px}.live:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:pulse 1.5s infinite}.controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-left:auto}.pill{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;background:rgba(15,20,36,.84);border:1px solid rgba(120,140,255,.18);white-space:nowrap}.pill strong{color:var(--b);font-size:16px}.btn{border:0;cursor:pointer;color:#06111a;font-weight:900;padding:12px 18px;border-radius:14px;background:linear-gradient(135deg,var(--b),var(--v));box-shadow:0 12px 28px rgba(102,217,255,.22);transition:.18s}.btn:hover{transform:translateY(-1px)}.btn:active{transform:translateY(1px) scale(.99)}.switch input{appearance:none;width:50px;height:28px;border-radius:999px;background:#2c3558;position:relative;border:1px solid rgba(120,140,255,.25);cursor:pointer;outline:none}.switch input:before{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .22s}.switch input:checked{background:linear-gradient(135deg,rgba(74,242,160,.92),rgba(102,217,255,.55))}.switch input:checked:before{transform:translateX(22px)}.main{display:grid;grid-template-columns:1.55fr .95fr;gap:16px;min-height:560px}.panel{position:relative;overflow:hidden}.panel:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(102,217,255,.05) 50%,transparent),radial-gradient(circle at 18% 0%,rgba(155,123,255,.12),transparent 22%)}.head{padding:18px 18px 12px;border-bottom:1px solid rgba(120,140,255,.12);display:flex;justify-content:space-between;gap:12px;align-items:center}.head h2{margin:0;font-size:15px}.head .meta{color:var(--mut);font-size:12px}.body{padding:18px;position:relative;z-index:1}.stage{display:grid;grid-template-rows:auto 1fr auto;gap:16px}.version{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(15,20,36,.82);border:1px solid rgba(102,217,255,.18);color:var(--mut)}.chip b{color:var(--b)}.compare{display:grid;grid-template-columns:1fr 150px 1fr;gap:14px;align-items:center;min-height:320px;padding:16px;border-radius:24px;border:1px solid rgba(120,140,255,.16);background:radial-gradient(circle at 50% 12%,rgba(102,217,255,.10),transparent 25%),linear-gradient(180deg,rgba(8,11,22,.90),rgba(12,16,31,.94));overflow:hidden}.compare:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 0 95%,rgba(255,255,255,.03) 95% 100%),linear-gradient(90deg,transparent 0 95%,rgba(255,255,255,.03) 95% 100%);background-size:100% 30px,30px 100%;opacity:.2;pointer-events:none}.col{position:relative;z-index:1}.label{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#9ad9ff;margin-bottom:10px}.canvas-wrap{position:relative;width:100%;aspect-ratio:1/1;max-width:320px;margin:0 auto;border-radius:24px;overflow:hidden}.canvas-wrap.big{max-width:430px;box-shadow:0 0 24px rgba(102,217,255,.14),0 0 70px rgba(155,123,255,.10)}.canvas-wrap.locked{outline:2px solid rgba(255,207,107,.85);box-shadow:0 0 22px rgba(255,207,107,.18),0 0 72px rgba(255,207,107,.12)}canvas{width:100%;height:100%;display:block}.fade{opacity:.36;transform:scale(.92)}.arrow{display:grid;place-items:center;gap:12px;position:relative;z-index:1}.arrow .line{width:100%;height:8px;border-radius:999px;background:linear-gradient(90deg,transparent,var(--b),var(--v),var(--g),transparent);box-shadow:0 0 18px rgba(102,217,255,.36);position:relative;overflow:hidden}.arrow .line:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);transform:translateX(-120%);animation:sweep 1.3s linear infinite}.arrow .caption{color:#d7defb;font-size:12px;text-align:center;text-transform:uppercase;letter-spacing:1.1px}.arrow .diff{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}.diff span{padding:6px 10px;border-radius:999px;background:rgba(15,20,36,.78);border:1px solid rgba(120,140,255,.18);color:#dfe6ff;font-size:12px}.diff .up{border-color:rgba(74,242,160,.24);color:#d6ffee}.diff .down{border-color:rgba(255,107,141,.24);color:#ffd5de}.thought,.scores,.rules,.hall,.story{border-radius:18px;background:rgba(11,16,28,.76);border:1px solid rgba(120,140,255,.16)}.thought{padding:16px;min-height:116px}.thought .caption,.rules .caption{color:#9ad9ff;font-size:12px;letter-spacing:1.3px;text-transform:uppercase;margin-bottom:10px}.thinking{min-height:54px;font-size:18px;line-height:1.45;white-space:pre-wrap}.typing{display:inline-block;width:10px;height:20px;margin-left:3px;vertical-align:middle;background:linear-gradient(180deg,var(--b),var(--v));border-radius:2px;animation:blink 1s step-end infinite}.lockline{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}.lock{padding:6px 10px;border-radius:999px;background:rgba(255,207,107,.10);border:1px solid rgba(255,207,107,.22);color:#ffe8b4;font-size:12px}.score-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.scores{padding:16px}.score-main{font-size:42px;font-weight:900;line-height:1;color:var(--g);text-shadow:0 0 16px rgba(74,242,160,.22)}.score-desc{color:var(--mut);font-size:13px}.meter{margin-top:10px}.meter .top{display:flex;justify-content:space-between;gap:12px;margin-bottom:8px;color:var(--mut)}.meter .top b{color:var(--txt)}.bar{height:14px;border-radius:999px;background:#101624;border:1px solid rgba(120,140,255,.12);overflow:hidden}.fill{height:100%;width:0;border-radius:999px;position:relative;overflow:hidden;transition:width .85s cubic-bezier(.2,.8,.2,1)}.fill:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);transform:translateX(-100%);animation:sheen 1.5s linear infinite}.sym{background:linear-gradient(90deg,var(--g),var(--y),var(--r))}.har{background:linear-gradient(90deg,var(--b),var(--v))}.tot{background:linear-gradient(90deg,#66ffd5,#8d9bff)}.hall{padding:16px;min-height:170px}.hall h3,.rules h3,.story h3{margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:.4px;display:flex;gap:10px;align-items:center}.rows{display:flex;flex-direction:column;gap:8px}.row{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:14px;background:rgba(21,28,46,.7);border:1px solid rgba(120,140,255,.12);font-size:13px}.row .tag{color:var(--b);font-weight:800;margin-right:8px}.story{padding:16px;display:flex;flex-direction:column;justify-content:center;gap:12px}.story .big{font-size:42px;line-height:1;color:var(--g);text-shadow:0 0 18px rgba(74,242,160,.24)}.story .txt{font-size:13px;color:#dce3ff;line-height:1.55}.rules{padding:16px}.chips{display:flex;flex-wrap:wrap;gap:10px}.chip2{padding:10px 12px;border-radius:999px;background:linear-gradient(135deg,rgba(102,217,255,.12),rgba(155,123,255,.12));border:1px solid rgba(102,217,255,.18);font-size:13px;animation:pop .45s ease both}.chip2.hot{border-color:rgba(255,207,107,.28);background:linear-gradient(135deg,rgba(255,207,107,.12),rgba(255,107,141,.10))}.spark{position:fixed;inset:auto 18px 18px auto;z-index:40;padding:12px 16px;border-radius:999px;font-weight:900;letter-spacing:1px;opacity:0;transform:translateY(12px) scale(.8);pointer-events:none}.spark.show{animation:badgeIn .9s ease both}.spark.ok{background:rgba(14,36,27,.92);border:1px solid rgba(74,242,160,.36);color:var(--g)}.spark.bad{background:rgba(45,14,20,.92);border:1px solid rgba(255,107,141,.34);color:var(--r)}@keyframes badgeIn{0%{opacity:0;transform:scale(.75) translateY(10px)}20%{opacity:1;transform:scale(1.05) translateY(0)}100%{opacity:0;transform:scale(1) translateY(-10px)}}@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.88)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes blink{50%{opacity:.15}}@keyframes sheen{to{transform:translateX(100%)}}@keyframes pulse{50%{transform:scale(.72);opacity:.7}}@keyframes float{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-14px,0)}}@keyframes sweep{to{transform:translateX(100%)}}@media (max-width:1200px){.main{grid-template-columns:1fr}.score-grid{grid-template-columns:1fr}.compare{grid-template-columns:1fr;min-height:auto}.arrow{padding:6px 0}}@media (max-width:720px){.app{padding:12px;gap:12px}.bar{top:8px;padding:12px}.canvas-wrap.big{max-width:100%}.brand h1{font-size:16px}.score-main{font-size:34px}.thinking{font-size:16px}}</style>
+</head>
+<body>
+<div class="grid"></div><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
+<div class="app">
+<header class="bar">
+  <div class="brand"><div class="logo">✳</div><div><h1>AI Pattern Inventor Lab</h1><div class="sub">AI doesn't draw with a network; it invents geometry with rules, then improves it.</div><div class="live">Live invention mode</div></div></div>
+  <div class="controls">
+    <div class="pill">Round <strong id="roundNo">1</strong></div>
+    <div class="pill">High Score <strong id="bestScore">0.00</strong></div>
+    <button class="btn" id="nextBtn">下一轮发明</button>
+    <label class="pill switch">Auto Run <input id="autoToggle" type="checkbox"></label>
+  </div>
+</header>
+
+<section class="main">
+  <div class="panel">
+    <div class="head"><h2>AI Design Chamber</h2><div class="meta">Old pattern → AI improves → New pattern blooms</div></div>
+    <div class="body stage">
+      <div class="version"><div class="chip">Version <b id="verText">v1</b> → <span id="verNext">v2</span></div><div class="chip">Target <b>美感</b></div></div>
+      <div class="compare" id="compareBox">
+        <div class="col"><div class="label">Previous pattern</div><div class="canvas-wrap fade"><canvas id="prevCanvas"></canvas></div></div>
+        <div class="arrow"><div class="line"></div><div class="caption" id="arrowText">AI 改进中...</div><div class="diff" id="diffTags"></div></div>
+        <div class="col"><div class="label">Invented pattern</div><div class="canvas-wrap big" id="currWrap"><canvas id="currCanvas"></canvas></div></div>
+      </div>
+      <div class="thought">
+        <div class="caption">Design Reason</div>
+        <div class="thinking" id="reasonText"></div>
+        <div class="lockline"><div class="lock" id="lockBadge">UNLOCKED</div><div class="lock" id="patternHint">Canvas-driven geometry, not image generation</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="head"><h2>Scoring & Rules</h2><div class="meta">The AI judges beauty with math, then rewrites itself</div></div>
+    <div class="body">
+      <div class="score-grid">
+        <div class="scores">
+          <div class="score-main" id="scoreTotal">0.00</div>
+          <div class="score-desc" id="scoreStory">Waiting for the first pattern...</div>
+          <div class="meter"><div class="top"><b>Symmetry</b><span id="symVal">0.00</span></div><div class="bar"><div class="fill sym" id="symFill"></div></div></div>
+          <div class="meter"><div class="top"><b>Complexity</b><span id="compVal">0.00</span></div><div class="bar"><div class="fill har" id="compFill"></div></div></div>
+          <div class="meter"><div class="top"><b>Harmony</b><span id="harmVal">0.00</span></div><div class="bar"><div class="fill har" id="harmFill"></div></div></div>
+          <div class="meter"><div class="top"><b>Golden Ratio</b><span id="goldVal">0.00</span></div><div class="bar"><div class="fill tot" id="goldFill"></div></div></div>
+        </div>
+        <div class="story">
+          <h3>Hall of Fame</h3>
+          <div class="big" id="hallCount">0</div>
+          <div class="txt" id="hallText">Beautiful inventions will lock automatically and be remembered here.</div>
+        </div>
+      </div>
+      <div class="hall" style="margin-top:14px">
+        <h3>Current Results</h3><div class="rows" id="hallRows"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="status">
+  <div class="rules">
+    <h3>Discovered Rules</h3>
+    <div class="chips" id="rulesChips"></div>
+  </div>
+</section>
+</div>
+<div class="spark ok" id="spark">✦</div>
+<script>
+
+const API_URL = 'http://localhost:5000/api/next';
+const RESET_URL = 'http://localhost:5000/api/reset';
+const TAU = Math.PI * 2;
+const $ = id => document.getElementById(id);
+
+const E = {
+  roundNo: $("roundNo"),
+  bestScore: $("bestScore"),
+  nextBtn: $("nextBtn"),
+  autoToggle: $("autoToggle"),
+  verText: $("verText"),
+  verNext: $("verNext"),
+  arrowText: $("arrowText"),
+  diffTags: $("diffTags"),
+  compareBox: $("compareBox"),
+  currWrap: $("currWrap"),
+  reasonText: $("reasonText"),
+  lockBadge: $("lockBadge"),
+  patternHint: $("patternHint"),
+  scoreTotal: $("scoreTotal"),
+  scoreStory: $("scoreStory"),
+  symVal: $("symVal"),
+  compVal: $("compVal"),
+  harmVal: $("harmVal"),
+  goldVal: $("goldVal"),
+  symFill: $("symFill"),
+  compFill: $("compFill"),
+  harmFill: $("harmFill"),
+  goldFill: $("goldFill"),
+  hallCount: $("hallCount"),
+  hallText: $("hallText"),
+  hallRows: $("hallRows"),
+  rulesChips: $("rulesChips"),
+  spark: $("spark")
+};
+
+const prevCanvas = $("prevCanvas");
+const currCanvas = $("currCanvas");
+const pctx = prevCanvas.getContext('2d');
+const cctx = currCanvas.getContext('2d');
+
+let hall = [];
+let autoTimer = null;
+let current = null;
+let prev = null;
+let best = 0;
+let busy = false;
+let reasonTimer = 0;
+let burst = [];
+let liveStart = performance.now();
+
+const colors = {
+  warm: ['#ff5a7a', '#ff8a55', '#ffd06b', '#fff0a8'],
+  cool: ['#5dd1ff', '#6d7bff', '#9b7bff', '#d9f6ff'],
+  complementary: ['#ff6dd6', '#58d9ff', '#ffd36a', '#a5ffcf'],
+  rainbow: ['#ff6161', '#ffb046', '#fff06a', '#5cff9c', '#56cfff', '#9a77ff']
+};
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const clamp = v => Math.max(0, Math.min(1, v));
+const scale = () => window.devicePixelRatio || 1;
+const ease = t => (t < 0.5) ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+function resize() {
+  const dpr = scale();
+  [prevCanvas, currCanvas].forEach(cv => {
+    const rect = cv.getBoundingClientRect();
+    cv.width = rect.width * dpr;
+    cv.height = rect.height * dpr;
+    const ctx = cv.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  });
+  if (prev) drawCanvas(pctx, prev, 0);
+  if (current) drawCanvas(cctx, current, ease(Math.min(1, (performance.now() - current.start) / 1000)), current.locked);
+}
+
+function diffList(a, b) {
+  if (!a) return [];
+  const out = [];
+  if (a.symmetry !== b.symmetry) out.push(`<span class="up">对称数 ${a.symmetry} → ${b.symmetry}</span>`);
+  if (a.layers !== b.layers) out.push(`<span class="up">图层 ${a.layers} → ${b.layers}</span>`);
+  if (a.color_scheme !== b.color_scheme) out.push(`<span class="up">配色 ${a.color_scheme} → ${b.color_scheme}</span>`);
+  if (a.base_radius !== b.base_radius) out.push(`<span class="down">半径 ${a.base_radius.toFixed(2)} → ${b.base_radius.toFixed(2)}</span>`);
+  if (a.complexity !== b.complexity) out.push(`<span class="down">复杂度 ${a.complexity.toFixed(2)} → ${b.complexity.toFixed(2)}</span>`);
+  if (a.rotation !== b.rotation) out.push(`<span class="up">旋转 ${a.rotation}° → ${b.rotation}°</span>`);
+  if (a.petal_count !== b.petal_count) out.push(`<span class="up">花瓣 ${a.petal_count} → ${b.petal_count}</span>`);
+  if (a.inner_pattern !== b.inner_pattern) out.push(`<span class="up">纹理 ${a.inner_pattern} → ${b.inner_pattern}</span>`);
+  return out;
+}
+
+async function type(el, text, speed = 16) {
+  el.innerHTML = '<span class="typing"></span>';
+  for (let i = 0; i <= text.length; i++) {
+    el.innerHTML = text.slice(0, i) + (i < text.length ? '<span class="typing"></span>' : '');
+    await sleep(speed);
+  }
+}
+
+function scoreBars(s = {}) {
+  const map = [
+    ['sym', s.symmetry_score || 0],
+    ['comp', s.complexity_score || 0],
+    ['harm', s.harmony_score || 0],
+    ['gold', s.golden_ratio_score || 0]
+  ];
+  map.forEach(([k, v]) => {
+    $(k + 'Val').textContent = v.toFixed(2);
+    $(k + 'Fill').style.width = `${clamp(v) * 100}%`;
+  });
+  E.scoreTotal.textContent = (s.total ?? 0).toFixed(2);
+}
+
+function pulseFlash(ok) {
+  E.spark.textContent = ok ? '✓ LOCKED' : '✗ REWORK';
+  E.spark.className = 'spark ' + (ok ? 'ok' : 'bad') + ' show';
+  clearTimeout(pulseFlash.t);
+  pulseFlash.t = setTimeout(() => E.spark.className = 'spark ok', 900);
+}
+
+function updateHall(r) {
+  if (r.scores && r.scores.total >= 0.88 && !hall.find(x => x.round === r.round)) hall.unshift(r);
+  hall = hall.slice(0, 5);
+  best = Math.max(best, (r.scores && r.scores.total) || 0);
+  E.bestScore.textContent = best.toFixed(2);
+  E.hallCount.textContent = hall.length;
+  E.hallText.textContent = hall.length
+    ? `最高分 ${Math.max(...hall.map(x => x.scores.total)).toFixed(2)}，已进入名人堂`
+    : '等待首个高分作品…';
+  E.hallRows.innerHTML = hall.map(x => `
+    <div class="row">
+      <div><span class="tag">#${x.round}</span>${x.is_locked ? 'Locked' : 'Open'} · ${x.params.symmetry}轴 · ${x.params.color_scheme}</div>
+      <div style="color:${x.is_locked ? 'var(--gold)' : 'var(--mut)'}">${x.scores.total.toFixed(2)}</div>
+    </div>
+  `).join('') || '<div class="row"><div>等待上榜</div><div>0</div></div>';
+}
+
+function rules(r) {
+  const list = r.rules_discovered || [];
+  E.rulesChips.innerHTML = list.map((x, i) => `
+    <div class="chip2 ${/(对称|颜色|层次|锁|复杂|稳定|和谐|黄金)/.test(x) ? 'hot' : ''}" style="animation-delay:${i * .04}s">${x}</div>
+  `).join('') || '<div class="chip2">等待规则发现…</div>';
+}
+
+function addBurst(ok) {
+  burst = [];
+  const n = ok ? 32 : 18;
+  for (let i = 0; i < n; i++) {
+    burst.push({ x: .5, y: .5, a: Math.random() * TAU, r: 0, s: .8 + Math.random() * 2.2, h: ok ? 130 + Math.random() * 40 : Math.random() * 360 });
+  }
+}
+
+function drawPattern(ctx, p, phase = 1, locked = false) {
+  const w = ctx.canvas.clientWidth || 300;
+  const h = ctx.canvas.clientHeight || 300;
+  const cx = w / 2;
+  const cy = h / 2;
+  const m = Math.min(w, h);
+  const scheme = colors[p.color_scheme] || colors.cool;
+  const ga = phase < .5 ? phase * 2 : (1 - phase) * 2;
+
+  ctx.clearRect(0, 0, w, h);
+  const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, m * .55);
+  bg.addColorStop(0, `rgba(255,255,255,${.05 + .06 * ga})`);
+  bg.addColorStop(.2, `rgba(102,217,255,${.10 * ga})`);
+  bg.addColorStop(.55, `rgba(155,123,255,${.08 * ga})`);
+  bg.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate((p.rotation + Math.sin((performance.now() - liveStart) / 900) * 2) * Math.PI / 180);
+
+  const aura = ctx.createRadialGradient(0, 0, 0, 0, 0, m * .48);
+  aura.addColorStop(0, locked ? 'rgba(255,207,107,.18)' : 'rgba(102,217,255,.16)');
+  aura.addColorStop(.65, 'rgba(0,0,0,0)');
+  ctx.fillStyle = aura;
+  ctx.beginPath();
+  ctx.arc(0, 0, m * .48, 0, TAU);
+  ctx.fill();
+
+  const layers = Math.max(1, Math.round(p.layers));
+  for (let layer = 0; layer < layers; layer++) {
+    const radius = (.12 + p.base_radius * (1 - layer * .12)) * m * .92;
+    const alpha = .12 + .16 * (1 - layer / (layers + 1)) * phase;
+    ctx.lineWidth = 1.4 + layer * .55;
+    ctx.shadowBlur = 16 + layer * 5;
+
+    for (let i = 0; i < p.symmetry; i++) {
+      const a = i * TAU / p.symmetry;
+      ctx.save();
+      ctx.rotate(a);
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = scheme[(i + layer) % scheme.length];
+      ctx.fillStyle = scheme[(i + layer + 1) % scheme.length];
+
+      const petals = Math.max(3, Math.round(p.petal_count));
+      for (let j = 0; j < petals; j++) {
+        const aa = j * TAU / petals + layer * .08;
+        const rr = radius * (.34 + .06 * j);
+        const px = Math.cos(aa) * rr;
+        const py = Math.sin(aa) * rr;
+        ctx.beginPath();
+        ctx.moveTo(px, py);
+        ctx.bezierCurveTo(px + rr * .16, py - rr * .52, px + rr * .76, py - rr * .16, px + rr * .96, py);
+        ctx.bezierCurveTo(px + rr * .76, py + rr * .16, px + rr * .16, py + rr * .52, px, py);
+        ctx.fill();
+        ctx.stroke();
+        if (layer % 2 === 0) {
+          ctx.beginPath();
+          ctx.arc(px, py, Math.max(1.4, m * .006 * (p.complexity * 1.5)), 0, TAU);
+          ctx.fillStyle = scheme[(j + i) % scheme.length];
+          ctx.fill();
+        }
+      }
+
+      if (p.inner_pattern === 'lines') {
+        ctx.globalAlpha = alpha * .8;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0, -radius * .9);
+        ctx.stroke();
+      }
+      if (p.inner_pattern === 'rings') {
+        ctx.globalAlpha = alpha * .9;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius * .42, 0, TAU);
+        ctx.stroke();
+      }
+      if (p.inner_pattern === 'dots') {
+        ctx.globalAlpha = alpha * .95;
+        for (let d = 0; d < 6; d++) {
+          const rr = radius * (.18 + .06 * d);
+          ctx.beginPath();
+          ctx.arc(Math.cos(d) * rr, Math.sin(d) * rr, 1.4 + layer * .25, 0, TAU);
+          ctx.fill();
+        }
+      }
+      if (p.inner_pattern === 'spiral') {
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        for (let s = 0; s < 130; s++) {
+          const t = s / 130;
+          const rr = radius * (t * .9);
+          const ang = t * TAU * 2.4 + layer * .45;
+          const x = Math.cos(ang) * rr;
+          const y = Math.sin(ang) * rr;
+          if (s === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+  }
+
+  ctx.globalAlpha = .9;
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = locked ? 'rgba(255,207,107,.95)' : 'rgba(102,217,255,.30)';
+  ctx.lineWidth = locked ? 3 : 1.7;
+  ctx.beginPath();
+  ctx.arc(0, 0, m * .37, 0, TAU);
+  ctx.stroke();
+
+  ctx.beginPath();
+  for (let i = 0; i < p.symmetry; i++) {
+    const a = i * TAU / p.symmetry;
+    ctx.moveTo(Math.cos(a) * m * .04, Math.sin(a) * m * .04);
+    ctx.lineTo(Math.cos(a) * m * .4, Math.sin(a) * m * .4);
+  }
+  ctx.stroke();
+
+  ctx.fillStyle = locked ? 'rgba(255,207,107,.95)' : 'rgba(102,217,255,.9)';
+  const pts = Math.max(8, Math.round(p.symmetry * 2));
+  for (let k = 0; k < pts; k++) {
+    const a = k * TAU / pts + phase * .8;
+    const rr = m * (.05 + .02 * Math.sin(k + phase * 4));
+    ctx.beginPath();
+    ctx.arc(Math.cos(a) * rr, Math.sin(a) * rr, 1.6 + phase * 1.2, 0, TAU);
+    ctx.fill();
+  }
+  ctx.restore();
+
+  if (burst.length) {
+    const nextBurst = [];
+    for (const pt of burst) {
+      pt.r += pt.s;
+      pt.a += .018;
+      const x = pt.x + Math.cos(pt.a) * pt.r / m;
+      const y = pt.y + Math.sin(pt.a) * pt.r / m;
+      const alpha = Math.max(0, 1 - pt.r / (m * .34));
+      if (alpha > .02) {
+        nextBurst.push(pt);
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.shadowBlur = 18;
+        ctx.shadowColor = `hsla(${pt.h},100%,65%,.8)`;
+        ctx.fillStyle = `hsla(${pt.h},100%,65%,${alpha})`;
+        ctx.beginPath();
+        ctx.arc(cx + x * m, cy + y * m, 1.5 + alpha * 2.2, 0, TAU);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+    burst = nextBurst;
+  }
+}
+
+function drawCanvas(ctx, round, phase = 1) {
+  drawPattern(ctx, round.params, phase, !!round.is_locked);
+}
+
+function renderCurrent() {
+  if (!current) return;
+  const t = Math.min(1, (performance.now() - current.start) / 1000);
+  drawPattern(cctx, current.params, ease(t), current.locked);
+  if (t < 1 || burst.length) requestAnimationFrame(renderCurrent);
+  else current.loop = false;
+}
+
+function lockUI(round) {
+  E.lockBadge.textContent = round.is_locked ? '🔒 LOCKED' : 'UNLOCKED';
+  E.patternHint.textContent = round.is_locked
+    ? 'Answer Anchor captured this pattern; the AI keeps it safe.'
+    : 'AI can still explore new directions.';
+  E.compareBox.classList.toggle('locked', !!round.is_locked);
+  E.currWrap.classList.toggle('locked', !!round.is_locked);
+}
+
+async function animateReason(text) {
+  clearTimeout(reasonTimer);
+  E.reasonText.innerHTML = '';
+  await type(E.reasonText, text, 14);
+}
+
+function applyRound(round) {
+  prev = { params: round.previous_params || round.params, is_locked: false };
+  current = { params: round.params, locked: !!round.is_locked, start: performance.now(), loop: true };
+  E.roundNo.textContent = round.round;
+  E.verText.textContent = `v${Math.max(1, round.version - 1)}`;
+  E.verNext.textContent = `v${round.version}`;
+  E.arrowText.textContent = (round.design_reason || '').split('。')[0].split('.')[0] || 'AI 正在改进…';
+  E.diffTags.innerHTML = diffList(round.previous_params, round.params).join('') || '<span>保持当前方向</span>';
+  E.scoreStory.textContent = round.design_reason || 'AI is inventing a new pattern.';
+  lockUI(round);
+  scoreBars(round.scores || {});
+  updateHall(round);
+  rules(round);
+  addBurst(round.is_locked);
+  drawCanvas(pctx, prev, 0);
+  animateReason(round.design_reason || '');
+  E.currWrap.style.transform = 'scale(.98)';
+  setTimeout(() => { E.currWrap.style.transform = 'scale(1)'; }, 30);
+  requestAnimationFrame(renderCurrent);
+}
+
+async function fetchRound() {
+  const r = await fetch(API_URL, { cache: 'no-store' });
+  if (!r.ok) throw new Error(`API ${r.status}`);
+  return await r.json();
+}
+
+async function resetLab() {
+  try {
+    const r = await fetch(RESET_URL, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`reset ${r.status}`);
+  } catch (e) {
+    console.warn('reset failed', e);
+  }
+}
+
+async function next() {
+  if (busy) return;
+  busy = true;
+  try {
+    const round = await fetchRound();
+    applyRound(round);
+  } catch (err) {
+    console.error(err);
+    pulseFlash(false);
+    E.scoreStory.textContent = 'API 请求失败，请检查后端与浏览器控制台。';
+    E.arrowText.textContent = '接口异常…';
+    E.reasonText.textContent = 'API 请求失败';
+  } finally {
+    busy = false;
+  }
+}
+
+function stopAuto() {
+  if (autoTimer) {
+    clearInterval(autoTimer);
+    autoTimer = null;
+  }
+}
+
+function startAuto() {
+  stopAuto();
+  autoTimer = setInterval(next, 4300);
+}
+
+E.nextBtn.onclick = next;
+E.autoToggle.onchange = e => e.target.checked ? startAuto() : stopAuto();
+window.addEventListener('resize', resize);
+
+(async () => {
+  history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+  resize();
+  await resetLab();
+  await next();
+})();
+
+</script>
+</body>
+</html>
+

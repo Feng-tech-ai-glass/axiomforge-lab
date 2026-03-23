@@ -1,0 +1,11 @@
+# Never upload these
+*.pt
+*.jsonl
+*.pkl
+checkpoints/
+__pycache__/
+.venv/
+models/
+*.log
+memory.json
+*.pyc
