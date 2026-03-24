@@ -78,7 +78,7 @@ The direct answer is **intuitive compression** — it skips the intermediate pro
 
 **DNA doesn't make answers "smarter." It makes the reasoning process visible, iterable, and trustworthy.** Not a better answer, but an answer that can be improved.
 
-A 29M-parameter "small brain" controlling a 70B+ "large brain" is not about replacing the large model's thinking. It's about making the large model's thinking **trackable, rollback-able, and self-improvable**.
+A small "DNA core" controlling a large model is not about replacing the large model's thinking. It's about making the large model's thinking **trackable, rollback-able, and self-improvable**.
 
 When intuition is wrong, you don't know which step failed. When DNA is wrong, you can pinpoint the exact round and module that made the bad judgment.
 

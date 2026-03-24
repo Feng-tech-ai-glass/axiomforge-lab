@@ -53,8 +53,8 @@ Honest answer:
 
 Claude was simulating DNA's behavior.
 
-In tests 1-3, no code was executed. No real LatentTransformer made predictions.
-No real 6.2K-parameter MC made decisions. No real LayeredMemory did retrieval.
+In tests 1-3, no code was executed. No real neural network made predictions.
+No real controller model made decisions. No real memory system did retrieval.
 
 What actually happened: Claude read DNA's design documents, then used its own
 reasoning ability to simulate "what would happen if DNA existed."
@@ -69,21 +69,21 @@ They are numbers Claude felt "sounded reasonable."
 You could say "in real deployment, real DNA modules would run."
 But this exposes a deeper problem:
 
-Can the real DNA (29M parameters) do what Claude-simulating-DNA did?
+Can the real DNA (a small model) do what Claude-simulating-DNA did?
 
 v3's "frame escape" — overturning the question's premise — what capabilities does this require?
   → Cross-domain analogy (connecting time currency to transition bridges)
   → Metacognition (awareness of being stuck inside a frame)
   → Creative reframing (proposing an entirely new perspective)
 
-Can a 29M-parameter LatentTransformer + 6.2K-parameter MC do these things?
-No. What did these things was Claude's 175B+ parameters.
+Can a small neural network + a tiny controller model do these things?
+No. What did these things was Claude's vastly larger parameter count.
 
 DNA's role in the first three tests was: a structured prompting framework.
 Not a cognitive engine. A prompt template.
 
 This flaw is unfixable because:
-  If DNA is powerful enough to do frame escape independently → it's not 29M params, it's AGI
+  If DNA is powerful enough to do frame escape independently → it's not a small model, it's AGI
   If DNA relies on external large models for reasoning → DNA's value is prompt engineering, not cognitive architecture
 ```
 
@@ -127,9 +127,9 @@ Does DNA have any of these?
 Problem: make predictions with what? With Claude simulating DNA?
 Then you're calibrating Claude's confidence, not DNA's.
 
-With the real 29M-parameter DNA?
+With the real small-parameter DNA?
 It doesn't have the ability to handle "will fusion succeed" type open questions.
-It can handle "will increasing MATRIX_LR improve val_bpb."
+It can handle "will changing hyperparameter X improve the loss."
 
 DNA's confidence numbers in its native domain (hyperparameter tuning) may be calibratable.
 But confidence numbers in the first three tests — completely uncalibratable.
@@ -181,7 +181,7 @@ Pattern:
 ```
 This is not a bug in DNA — it's DNA's fundamental limitation.
 
-DNA is 29M parameters. Its "cognitive ability" at this parameter scale is:
+DNA is a small model. Its "cognitive ability" at this scale is:
   ✓ Learning statistical patterns between hyperparameters
   ✓ Predicting simple causal relationships (increase X → Y decreases)
   ✓ Making explore/exploit decisions in a limited action space
@@ -215,7 +215,7 @@ DNA's core experimental evidence:
   "3 universal principles"
 
 But what do these experiments actually prove?
-  → DNA can learn "decreasing MATRIX_LR is usually better"
+  → DNA can learn "decreasing a specific learning rate is usually better"
   → This is statistical learning, not cognition
   → Any Bayesian optimizer (Optuna, BOHB) could achieve similar results
   → Possibly better, because they have more mature mathematical frameworks
@@ -264,7 +264,7 @@ The paradox:
 
 If DNA has the ability to judge "where it needs improvement"
   → It needs to understand its own architecture
-  → A 29M-parameter model cannot understand its own architecture (requires metacognition)
+  → A small model cannot understand its own architecture (requires metacognition)
   → In practice, Claude is understanding DNA's architecture and proposing improvements
   → DNA's "self-improvement" = "Claude improving DNA"
 
@@ -280,7 +280,7 @@ The surgery is real, but "self-improvement" is a false description.
 ```
 Self-improvement requires self-understanding.
 Self-understanding requires sufficient model capacity to represent itself.
-29M parameters is not enough to represent a 29M-parameter model
+A small model does not have enough capacity to represent itself
 (approximate analogy to Gödel's incompleteness theorem).
 
 Unless DNA becomes AGI-level, "self-improvement" will always be
@@ -348,9 +348,9 @@ Answer Anchor may just be a "newer is always better" bias engine.
 
 | # | Flaw | Fixable? | Reason |
 |---|------|----------|--------|
-| 1 | DNA doesn't exist (Claude was simulating it in tests) | **Unfixable** | Real 29M DNA cannot do the reasoning shown in tests 1-3 |
+| 1 | DNA doesn't exist (Claude was simulating it in tests) | **Unfixable** | Real small-model DNA cannot do the reasoning shown in tests 1-3 |
 | 2 | Confidence numbers are decorative | **Partially fixable** | Calibratable in native domain (tuning), not in open reasoning |
-| 3 | Frame escape is Claude's ability | **Unfixable** | 29M parameters cannot do cross-domain analogy or metacognition |
+| 3 | Frame escape is Claude's ability | **Unfixable** | A small model cannot do cross-domain analogy or metacognition |
 | 4 | Experiments prove tuning, not cognition | **Fixable** | More cross-domain experiments could narrow the gap |
 | 5 | Self-improvement is external improvement | **Unfixable** | Mathematical limitation: model cannot fully understand itself |
 | 6 | Answer Anchor has novelty bias | **Partially fixable** | Needs "rollback tests" and independent verification |
@@ -365,7 +365,7 @@ Answer Anchor may just be a "newer is always better" bias engine.
 
 ```
 If DNA is a "cognitive architecture" — it failed.
-  29M parameters cannot do cognition. The cognition in tests 1-3 was Claude's.
+  A small model cannot do cognition. The cognition in tests 1-3 was Claude's.
 
 If DNA is a "structured prompting framework" — it succeeded.
   "Remember last round", "attack yourself", "do something different" — these prompts
@@ -381,7 +381,7 @@ This reduces DNA's grandeur but increases its honesty.
 "A structured framework that enables LLMs to do multi-round iterative reasoning"
   → This is a real, valuable, verifiable claim
 
-"A 29M-parameter cognitive architecture driving a 70B+ brain"
+"A small-parameter cognitive architecture driving a large brain"
   → This is an over-packaged, misleading claim
 ```
 
