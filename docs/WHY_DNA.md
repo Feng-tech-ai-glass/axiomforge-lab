@@ -133,3 +133,205 @@ When DNA is wrong, you can pinpoint the exact round and module that made the bad
 
 直觉出错时，你不知道哪一步错了。
 DNA 出错时，你可以定位到具体哪一轮、哪个模块的判断失误。
+
+---
+
+# Round 2: The Proof — Same Question, Better Answer
+
+# 第2轮证明：同一个问题，更好的答案
+
+**This is the killer demo. DNA remembers what it learned and improves on the next pass.**
+
+**这是杀手级演示。DNA 记住了第1轮学到的东西，第2轮自动进化。**
+
+---
+
+## DNA State at Round 2 Start / 第2轮启动时的 DNA 状态
+
+```
+[Layered Memory] Loading Round 1 memories:
+  episodic: 7 vulnerability records, 4 patch attempts
+  semantic: 2 extracted rules
+    1. "Any currency based on a finite resource fails when that resource is automated"
+    2. "Power transfers to whoever defines the multiplier"
+
+[Meta-Controller] Strategy adjustment:
+  Round 1 confidence: 0.87 → 0.13 improvement headroom
+  Round 1 weak points: Bug #3 (automation paradox) marked "critical" but only simple patch
+  Decision: EXPLORE — don't repeat Round 1, attack the 3 unsolved problems
+
+[Effort Scaler] Round 2 budget allocation:
+  40% → Deep solution for automation paradox
+  30% → Retirement impossibility (Round 1 leftover)
+  20% → Cross-civilization applicability (Round 1 blind spot)
+  10% → Adversarial testing of Round 1 patches
+```
+
+---
+
+## Breakthrough 1: The Real Solution to Automation / 突破1：自动化悖论的真正解法
+
+Round 1 simply averaged robot output across the population — too crude.
+
+第1轮只是把机器人产出平均分配——太粗暴了。
+
+```
+[World Model] Reviewing Round 1 patch:
+  automation_dividend = total_robot_output / population
+  Problem: when automation reaches 90%, everyone gets massive free CT
+           → CT inflation → time currency devalues to zero
+  Round 1 confidence: 0.45 (marked as unsolved)
+```
+
+**v2: Dual-Track System — Human Time + Machine Time separation**
+
+**v2方案：双轨制——人类时间 + 机器时间分离**
+
+```
+Human Chrono-Token (HCT) — can only be minted by human labor
+  → Used for: interpersonal services, creativity, companionship, education, care
+  → Cannot be produced by machines
+
+Machine Chrono-Token (MCT) — minted by automated output
+  → Used for: commodity purchases, infrastructure, standardized services
+  → Distributed equally to all citizens
+
+Exchange rate: 1 HCT = f(automation_rate) x MCT
+  Automation =  0%: 1 HCT =  1 MCT (equivalent)
+  Automation = 50%: 1 HCT =  3 MCT (human time scarcer)
+  Automation = 95%: 1 HCT = 50 MCT (human time is luxury)
+```
+
+```
+[Answer Anchor] Discovery — overriding Round 1 hard lock:
+  Round 1: "Post-scarcity societies don't need any currency"
+  Round 2: "Post-scarcity societies don't need commodity currency,
+            but human attention and companionship are forever scarce
+            → HCT always has value"
+
+  Old confidence: 0.91 → UNLOCKED (overridden by stronger insight)
+  New confidence: 0.94 → RE-LOCKED
+
+  Universal rule updated:
+  Old: "Finite resource currency fails when automated"
+  New: "Automatable resource currency fails; non-automatable resource currency appreciates"
+```
+
+**This is the key breakthrough — Round 1 said time currency would die. Round 2 discovered that human time won't die; only the machine-replaceable part will.**
+
+**这是关键突破——第1轮说时间货币会死。第2轮发现人类时间不会死，死的只是机器可替代的那部分。**
+
+---
+
+## Breakthrough 2: Retirement Solved / 突破2：退休问题解法
+
+Round 1 leftover: 2% daily decay + 30-day cap = retirement impossible.
+
+第1轮遗留：每日衰减2% + 30天上限 = 不可能退休。
+
+**v2: Life-Cycle CT Curve / v2方案：生命周期 CT 曲线**
+
+```
+Age       Daily Base CT   Notes
+0-18      16 CT           Paid by social pool (education investment)
+18-25     16 CT           Standard
+25-60     16 CT           Standard + 1 CT/day auto-saved to "pension pool"
+60-70     14 CT           + pension pool releases 2 CT/day
+70-80     10 CT           + pension pool releases 4 CT/day + elder bonus 2 CT
+80+        6 CT           + pension pool releases 4 CT/day + elder bonus 6 CT
+
+Pension pool rules:
+  - No early withdrawal
+  - Exempt from decay (the only exception)
+  - Death → remainder returns to social pool (no inheritance, but feeds back)
+```
+
+```
+[World Model] Prediction:
+  Working 35 years (age 25-60), saving 1 CT/day → ~12,775 CT total
+  Retirement 60-80 consumes ~5,840 CT → pension pool covers it
+  Confidence: 0.82 — mathematically viable
+```
+
+---
+
+## Breakthrough 3: Cross-Civilization Test / 突破3：跨文明适用性
+
+Round 1 blind spot — only considered modern industrial society.
+
+第1轮盲区——只考虑了现代工业社会。
+
+| Society Type | Time Currency Fit | Reason |
+|-------------|-------------------|--------|
+| Hunter-gatherer / 狩猎采集 | High / 高 | Time is their only resource — natural fit |
+| Agricultural / 农业社会 | Medium / 中 | Land output is nonlinear with time — needs seasonal adjustment |
+| Industrial / 工业社会 | High / 高 | Standardized labor hours — optimal fit period |
+| Information / 信息社会 | Medium / 中 | Creative work decouples time from output |
+| Post-AI / 后AI社会 | Low→High | MCT fails, but HCT becomes the only real currency |
+
+```
+[Abstraction Engine] New rules extracted:
+  → "Time currency fitness correlates with labor standardization"
+  → "Creative economies need an 'output quality' correction factor"
+  → Transferable to: any time-billed industry (lawyers, consulting, education)
+```
+
+---
+
+## Adversarial Test of Round 1 Patches / 对第1轮修补的对抗测试
+
+```
+[Meta-Controller] Decision: attack our own Round 1 solutions
+```
+
+| Round 1 Patch | Round 2 Attack | Survived? |
+|---------------|---------------|-----------|
+| DF cap = 5x | What if everyone learns high-DF skills? | Yes — scarcity auto-adjusts |
+| Decentralized rating certification | Rating collusion (I rate you 5, you rate me 5) | **No** — needs blind review + random audit |
+| Automation dividend (avg distribution) | Replaced by dual-track HCT/MCT in v2 | Replaced |
+| 2%/day decay | What about retirement? | Solved by pension pool (decay-exempt) |
+
+```
+[World Model] Post-Round-2 patch survival rate:
+  Round 1: 4/7 vulnerabilities patched → 57% survival
+  Round 2: 6/7 vulnerabilities patched → 86% survival
+  Only unsolved: black market exchange rates (inherent to any dual-currency system)
+```
+
+---
+
+## v1 vs v2: The Evolution / v1 与 v2 的进化
+
+| Dimension | Round 1 (v1) | Round 2 (v2) |
+|-----------|-------------|-------------|
+| **Core conclusion** | Time currency self-destructs in AI era | Human time (HCT) is forever valuable; commodity time (MCT) dies |
+| **Automation fix** | Simple average distribution | Dual-track HCT/MCT system |
+| **Retirement** | Unsolved (marked "impossible") | Life-cycle CT curve + pension pool |
+| **Scope** | Modern society only | 5 civilization types tested |
+| **Patch rate** | 57% (4/7) | 86% (6/7) |
+| **Universal rules** | 2 | 5 |
+| **Confidence** | 0.87 | 0.93 |
+| **Answer Anchor** | "Post-scarcity needs no currency" | **Overridden** → "Non-automatable resource currency appreciates" |
+
+---
+
+## The Proof / 证明
+
+```
+[DNA Core Proof]
+Round 2 overturned Round 1's hard-locked conclusion.
+This cannot happen with intuitive leaps — you don't overturn your own "eureka moment."
+
+But DNA's Answer Anchor has explicit unlock conditions:
+when new evidence confidence > old lock confidence, update is allowed.
+
+Round 1 lock: 0.91 (post-scarcity needs no currency)
+Round 2 key:  0.94 (non-automatable resources retain value)
+0.94 > 0.91 → lock overridden, conclusion upgraded.
+
+This is what "improvable answers" means.
+No human would voluntarily abandon their first elegant insight.
+DNA does it automatically when the evidence is stronger.
+```
+
+**DNA 第2轮推翻了第1轮的硬锁定结论。这在直觉跳跃中不可能发生——你不会推翻自己的"顿悟"。但 DNA 的 Answer Anchor 有明确的解锁条件：当新证据置信度 > 旧锁定置信度时，自动更新。这就是"可改进的答案"的含义。**
