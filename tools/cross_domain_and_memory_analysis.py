@@ -34,7 +34,12 @@ for path in ['karpathy_loop_results/v4_worldmodel.jsonl', 'karpathy_loop_results
         pass
 
 # Load fault diagnosis domain data
-from core.expert_conflict_lab.domain_fault_diagnosis import load_all_fault_episodes
+# DNA Core module (not included in open-source release)
+try:
+    from axiomforge_core.domain_fault_diagnosis import load_all_fault_episodes
+except ImportError:
+    print("ERROR: This tool requires the AxiomForge DNA core (not included in open-source release).")
+    sys.exit(1)
 fault_data = load_all_fault_episodes()
 
 print(f"\n  Domain 1 (Hyperparameter): {len(hp_data)} experiments")
@@ -56,7 +61,7 @@ print(f"\n  Cross-domain rule transfer analysis:")
 # Rule: "direction matters" — does this transfer?
 # HP: decrease is usually better for most params
 # Fault: certain strategies always fail (expand_then_stabilize)
-from core.expert_conflict_lab.abstraction_engine import AbstractionEngine
+from axiomforge_core.abstraction_engine import AbstractionEngine
 
 ae = AbstractionEngine()
 ae.analyze(hp_data)
@@ -104,7 +109,7 @@ print(f"\n{'='*60}")
 print("[ITEM 5] Memory Compression Impact on Decision Quality")
 print("=" * 60)
 
-from core.expert_conflict_lab.layered_memory import LayeredMemory
+from axiomforge_core.layered_memory import LayeredMemory
 
 # Build memory from experiment data
 mem = LayeredMemory(working_size=10)

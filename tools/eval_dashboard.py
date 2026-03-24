@@ -20,10 +20,19 @@ sys.path.insert(0, ".")
 
 import torch
 import numpy as np
-from core.expert_conflict_lab.world_model import WorldModel
-from core.expert_conflict_lab.domain_fault_diagnosis import (
-    load_all_fault_episodes, fault_state_to_tensor
-)
+
+# DNA Core modules (not included in open-source release)
+# WorldModel, load_all_fault_episodes, fault_state_to_tensor
+# require the proprietary AxiomForge DNA core package
+try:
+    from axiomforge_core.world_model import WorldModel
+    from axiomforge_core.domain_fault_diagnosis import (
+        load_all_fault_episodes, fault_state_to_tensor
+    )
+except ImportError:
+    print("ERROR: This tool requires the AxiomForge DNA core (not included in open-source release).")
+    print("See README.md for details on the open-core model.")
+    sys.exit(1)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
