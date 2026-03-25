@@ -165,6 +165,12 @@ The scaffold's ability to modify itself and improve (+28%) is notable, but the o
 
 The most practically useful capability demonstrated is self-review: the evolved scaffold identified 22 specific flaws in an overclaimed paper and provided actionable revision guidance. This monitoring function has clearer value than the reasoning enhancement function.
 
+### 6.6 Scaffold Maturity Assessment
+
+The evolved scaffold (v2.2) represents an early-stage control layer rather than a learning architecture. It can sense output quality, route reasoning strategy, log decisions, and issue bias correction commands. However, it does not adapt its internal decision policy from experience: learned rules are stored but never influence future decisions, quality thresholds are hardcoded rather than data-derived, and correction commands are issued without verifying whether they actually reduced bias.
+
+Its practical value lies in instrumentation and monitoring — not in outperforming a strong fixed constitutional prompt. This distinction is critical: a scaffold that provides observability into reasoning processes has genuine utility even when it does not improve reasoning output.
+
 ## 7. Limitations
 
 1. **Small sample sizes**: n=3 pilot and n=80 extended are insufficient for strong statistical claims
