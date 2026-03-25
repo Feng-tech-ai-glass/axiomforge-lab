@@ -21,7 +21,11 @@ Our findings are primarily negative: a single well-crafted "constitutional" prom
 
 Tree of Thoughts (Yao et al., 2023) introduced structured multi-path reasoning. Reflexion (Shinn et al., 2023) demonstrated verbal self-improvement with episodic memory. CoALA (Sumers et al., 2024) proposed a cognitive architecture framework for language agents. DSPy (Khattab et al., 2024) compiles declarative LM calls into optimized pipelines. OPRO (Yang et al., 2024) uses LLMs as optimizers. The weak-to-strong paradigm (Burns et al., 2023) explores small models supervising large ones. Self-Rewarding LMs (Yuan et al., 2024) demonstrate self-generated reward signals. Metacognitive prompting (Wang & Zhao, 2023) and Quiet-STaR (Zelikman et al., 2024) explore explicit reasoning processes.
 
+Recent work on LLM routing explores small models directing queries to appropriate large models. RouteLLM (LMSYS, 2024) uses a small BERT classifier to route between GPT-4 and Mixtral, saving 85% cost while maintaining 95% quality. BEST-Route (Microsoft, ICML 2025) selects both model and number of responses based on query difficulty. These systems optimize cost through model selection but do not address prompt strategy selection — the question we investigate.
+
 These systems demonstrate clear improvements but typically do not isolate multi-round interaction effects from architectural contributions. Our work provides this isolation and finds that architectural complexity adds minimal value beyond what a good single prompt achieves.
+
+Our core contribution is not a better reasoning system but a self-refuting one: a framework that can propose hypotheses about its own architecture, test them, and conclude that it should not exist in its current form. We argue that this capacity for self-negation — not self-improvement — is the prerequisite for genuine evolution. Without the ability to overturn its own premises, a system can only locally optimize within a fixed frame. Our framework demonstrated this through five phases: building a scaffold, proving the scaffold barely helps, attempting to improve it, proving the improvement is harmful, and concluding that a fixed prompt is sufficient.
 
 ## 3. Method
 
@@ -116,7 +120,31 @@ Constitutional wins 5 of 6 categories. Prediction is the sole exception where mu
 
 The router captures only 3.8% of available oracle headroom. This improvement is not meaningful.
 
-### 5.4 Self-Evolution Results
+### 5.4 Level 2: Semantic Router Results
+
+We tested whether LLM-based semantic classification (instead of keyword matching) could improve routing. The LLM classified each question by type, difficulty, and requirements, then dynamically compiled a customized constitutional prompt.
+
+| Run | Router Avg | Baseline Avg | Delta | Classification Accuracy |
+|-----|-----------|-------------|-------|------------------------|
+| Run 1 (30 questions) | 6.183 | 6.600 | -0.417 | 67% |
+| Run 2 (30 questions) | 5.533 | 6.750 | -1.217 | 67% |
+
+Both runs failed both pass criteria (accuracy >= 85%, delta >= +0.3). The semantic router was not merely ineffective — it was actively harmful, scoring worse than the fixed baseline in both runs. Classification accuracy (67%) was well below the 85% threshold. The overhead of an additional classification API call, combined with misrouted questions, degraded rather than improved output quality.
+
+### 5.5 Trained Strategy Brain Results
+
+A 4,545-parameter neural network was trained on 100 questions (320 method-score pairs) to predict the best strategy per question category. After 200 epochs of training, the brain converged to a single policy: select Constitutional for all categories.
+
+| Metric | Value |
+|--------|-------|
+| Test accuracy | 50% (equivalent to random) |
+| Brain-guided avg score | 5.45 |
+| Fixed Constitutional avg score | 5.70 |
+| Delta | -0.25 |
+
+The trained brain independently confirmed our conclusion: Constitutional is optimal across all categories. However, the brain's execution of this policy scored lower than simply using the fixed prompt, due to classification overhead.
+
+### 5.6 Self-Evolution Results
 
 The scaffold was allowed to modify its own code across generations:
 
