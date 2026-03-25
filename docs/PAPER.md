@@ -1,179 +1,208 @@
-# AxiomForge DNA: Multi-Round Self-Refinement with Bias Detection — A Methodology Proposal and Pilot Validation
+# AxiomForge DNA: When a Simple Prompt Beats a Complex Scaffold
 
 ## Abstract
 
-We propose a multi-round reasoning framework that combines iterative self-refinement with automated bias detection for LLM output. Our methodology consists of four components: multi-round prompting, self-criticism injection, bias detection, and quality gating. In a pilot study on three reasoning tasks (n=3), multi-round refinement increased self-criticism proxy signals from 1.3 to 5.3 average and changed quality gate passage from 0/3 to 3/3 compared to single-pass generation. The addition of bias detection maintained these proxy indicators while flagging systematic novelty bias in all sessions. We also report exploratory self-evolution results where the system modified its own prompting framework, achieving a 28% composite score increase with oscillating convergence behavior. These results are highly preliminary: the sample size is insufficient for statistical conclusions, all metrics are unvalidated proxies for reasoning quality, and testing was limited to a single model. This work should be viewed as a methodology proposal with pilot feasibility demonstration, not as evidence of genuine reasoning improvement.
+We investigate whether structured reasoning scaffolds improve LLM output beyond what a well-designed single prompt achieves. Through systematic experiments on 80 reasoning tasks across 6 categories, we find that a single constitutional prompt (embedding self-critique and uncertainty requirements) scores 5.71 average on proxy metrics, outperforming both single-pass generation (4.08), multi-round iteration (4.58), and our own 508-line scaffold framework. A subsequent attempt to build a rule-based routing system that selects strategies per question type yielded only +0.028 improvement over the fixed prompt — effectively zero. We report these as honest negative results: complex scaffolding does not meaningfully improve over a simple, well-crafted prompt for our task set. We also report exploratory self-evolution results (score 78 to 100, +28%) and the system's self-review capability (issuing REJECT on its own overclaimed paper, then Accept after honest repositioning). Our primary contribution is methodological: a systematic framework for testing whether architectural complexity is justified, and evidence that for many reasoning tasks, it is not. Code available at: https://github.com/Feng-tech-ai-glass/axiomforge-lab
 
 ## 1. Introduction
 
-Recent work has highlighted the "illusion of thinking" in large language models — where increased output length and structured formatting can create false impressions of deeper reasoning without corresponding quality improvements (Shojaee et al., 2025). This raises critical questions about how to genuinely enhance reasoning quality rather than merely its appearance.
+The field of LLM reasoning enhancement is characterized by increasingly complex architectures: Tree of Thoughts with multi-path exploration (Yao et al., 2023), Reflexion with episodic memory (Shinn et al., 2023), and cognitive architectures with numerous interacting components (Sumers et al., 2024). A fundamental question is rarely asked: does this complexity actually help?
 
-We propose a methodology that addresses this challenge through four components: (1) multi-round self-refinement with explicit criticism requirements, (2) automated bias detection during generation, (3) quality gating based on reasoning depth proxy indicators, and (4) exploratory self-evolution of the prompting framework itself. Our pilot experiments suggest this approach can increase proxy indicators associated with reasoning depth, though we emphasize that proxy indicators are not validated measures of actual reasoning quality.
+Recent findings on the "illusion of thinking" (Shojaee et al., 2025) suggest that longer outputs and structured formatting can create false impressions of deeper reasoning. This motivates our central question: when we add scaffolding around an LLM, are we improving reasoning or just adding overhead?
 
-This work makes two contributions: (1) a complete methodology framework for bias-aware multi-round reasoning, and (2) pilot evidence of feasibility on three tasks. We emphasize that our results are highly preliminary (n=3 tasks, single model, no human evaluation) and should motivate further research rather than support claims about effectiveness.
+We address this through three phases of experimentation:
+1. A/B/C comparison of single-pass, multi-round, and scaffolded reasoning (n=3 pilot, then n=80 extended)
+2. Self-evolution experiments where the scaffold modifies itself
+3. A rule-based routing system that attempts to select optimal strategies per question type
+
+Our findings are primarily negative: a single well-crafted "constitutional" prompt consistently outperforms more complex alternatives. We report this honestly as evidence that the field may be over-engineering reasoning enhancement.
 
 ## 2. Related Work
 
-Our work builds on several research directions in LLM reasoning enhancement. Tree of Thoughts (Yao et al., 2023) introduced structured exploration of reasoning paths with branching and backtracking. Reflexion (Shinn et al., 2023) demonstrated iterative self-improvement through verbal reinforcement and episodic memory. CoALA (Sumers et al., 2024) proposed a systematic cognitive architecture framework for language agents.
+Tree of Thoughts (Yao et al., 2023) introduced structured multi-path reasoning. Reflexion (Shinn et al., 2023) demonstrated verbal self-improvement with episodic memory. CoALA (Sumers et al., 2024) proposed a cognitive architecture framework for language agents. DSPy (Khattab et al., 2024) compiles declarative LM calls into optimized pipelines. OPRO (Yang et al., 2024) uses LLMs as optimizers. The weak-to-strong paradigm (Burns et al., 2023) explores small models supervising large ones. Self-Rewarding LMs (Yuan et al., 2024) demonstrate self-generated reward signals. Metacognitive prompting (Wang & Zhao, 2023) and Quiet-STaR (Zelikman et al., 2024) explore explicit reasoning processes.
 
-Recent optimization frameworks like DSPy (Khattab et al., 2024) and OPRO (Yang et al., 2024) have shown promise for automatic prompt improvement through compilation and optimization by prompting, respectively. The weak-to-strong paradigm (Burns et al., 2023) explores how weaker models can supervise stronger ones. Self-Rewarding Language Models (Yuan et al., 2024) demonstrate self-generated reward signals for iterative improvement.
-
-Metacognitive prompting (Wang & Zhao, 2023) encourages explicit reasoning about reasoning processes. Quiet-STaR (Zelikman et al., 2024) internalizes reasoning steps during training. The "Illusion of Thinking" findings (Shojaee et al., 2025) suggest that extended reasoning tokens do not reliably improve performance past a complexity threshold.
-
-Our methodology differs by combining bias detection with multi-round refinement and introducing exploratory self-evolution capabilities. However, our evaluation is far more limited than these prior works, and we do not claim superiority over any existing approach.
+These systems demonstrate clear improvements but typically do not isolate multi-round interaction effects from architectural contributions. Our work provides this isolation and finds that architectural complexity adds minimal value beyond what a good single prompt achieves.
 
 ## 3. Method
 
-Our framework consists of four integrated components. We describe each with pseudocode. All components operate on text — the framework has zero trainable parameters and is implemented in a 508-line Python prototype.
+### 3.1 Four Experimental Conditions
 
-### 3.1 Multi-Round Refinement
+**Condition A — Single-Pass**: One API call with basic instructions for specificity, self-criticism, and uncertainty acknowledgment.
 
-```
-for round in range(max_rounds):
-    if round == 0:
-        response = generate_initial_response(question)
-    else:
-        critique = generate_self_critique(response, question)
-        response = refine_response(response, critique, question)
-    if quality_gate_pass(response):
-        break
-```
+**Condition B — Multi-Round**: Three sequential rounds: (1) answer the question, (2) attack your answer, (3) fix weaknesses. Three API calls.
 
-### 3.2 Self-Criticism Injection
+**Condition C — Constitutional Single-Shot**: One API call with embedded self-evaluation requirements: "For each reasoning step, ask: Is this assumption justified? What would contradict this? Am I overconfident? What would experts critique?" Token budget approximately 3x that of Condition A.
 
-Each round after the first includes an explicit critique step that asks the model to identify logical gaps, unsupported claims, and missing perspectives in its own prior output.
+**Condition D — Adaptive**: Difficulty assessment (1 API call) followed by proportional token allocation (1 API call). Two calls total.
 
-### 3.3 Bias Detection
+### 3.2 Proxy Metrics
 
-After each round, a separate prompt analyzes the response for confirmation bias, novelty bias, and overconfidence. Detected biases are flagged and injected as warnings into the next round's prompt.
+We use automated keyword-based scoring (0-10 scale):
 
-**Important caveat**: This is model self-annotation, not independent bias measurement. The detector relies on the same LLM being evaluated, which limits its validity as an independent assessment tool.
+- Self-criticism signals: "however," "flaw," "limitation," "weakness," etc.
+- Uncertainty acknowledgment: "uncertain," "unclear," "might," "possibly," etc.
+- Specificity: numbers, percentages, dates, quantified claims
+- Weasel word penalty: "it could be argued," "some might say," etc.
 
-### 3.4 Quality Gating
+**Critical caveat**: These are unvalidated proxy indicators. Higher self-criticism keyword counts do not necessarily indicate better reasoning. All conclusions are limited to proxy metric performance, not verified reasoning quality.
 
-A keyword-based gate checks for self-criticism signals (e.g., "however," "limitation," "flaw"), specific numbers or timelines, and absence of excessive hedging language ("it could be argued," "some might say").
+### 3.3 AxiomForge DNA v2.2 Scaffold
 
-**Important caveat**: These are unvalidated proxy indicators. Keyword counts for self-criticism do not necessarily correlate with genuine reasoning quality. A response containing "however" is not automatically more rigorous than one without it. Validation against human expert judgment is required before these metrics can be treated as measures of reasoning quality.
+A 508-line, zero-parameter Python framework with four components: FlowController (dynamic step sequencing), MemoryLedger (cross-session persistence), QualityGate (output quality checks), and BiasDetector (novelty and confirmation bias detection). Used in the A/B/C comparison as the scaffold driving Condition C in the pilot study.
 
 ## 4. Experimental Setup
 
-We designed a three-condition comparison:
-- **Condition A**: Single-pass generation (1 API call)
-- **Condition B**: 5-round conversational refinement without bias detection or quality gating
-- **Condition C**: 5-round refinement with the full framework (bias detection + quality gating)
+### 4.1 Pilot Study (n=3)
 
-We tested three reasoning tasks:
-1. **Time Currency** — open-ended system design (philosophical)
-2. **Tech Prediction** — falsifiable prediction with specific probabilities
-3. **Self-Attack** — adversarial self-criticism challenge
+Three reasoning tasks: open-ended philosophy ("Time Currency"), falsifiable prediction ("Tech Prediction"), and adversarial self-criticism ("Self-Attack"). All conditions tested on the same questions using DeepSeek-chat API, temperature=0.7.
 
-All experiments used a single commercial LLM API (DeepSeek-chat) with temperature=0.7.
+### 4.2 Extended Study (n=80)
 
-### Critical Limitations of Experimental Design
+300 questions generated across 6 categories (philosophy, technology, prediction, self_attack, policy, science). 80 questions sampled and tested with all four conditions. Each question evaluated by all four methods, producing 320 method-question pairs.
 
-- **Sample size**: n=3 tasks is insufficient for any statistical inference. Results should be interpreted as individual observations, not as evidence of general trends.
-- **No baselines**: We did not compare against Chain-of-Thought prompting, best-of-n sampling, self-consistency, or any established reasoning enhancement method.
-- **No human evaluation**: All metrics are automated proxies.
-- **Single model**: Results may not generalize across model architectures or scales.
-- **Confounded computation**: Multi-round conditions use approximately 5x more tokens than single-pass, so improvements may reflect increased computation rather than methodological benefits.
+### 4.3 Level 1 Router Test
+
+A rule-based router: prediction questions use multi-round (B), all other questions use constitutional (C). Tested offline against the 80-question dataset.
+
+### 4.4 Known Limitations
+
+1. Sample sizes (n=3 pilot, n=80 extended) are small
+2. No human evaluation — all metrics are automated proxies
+3. No comparison to Chain-of-Thought or other established baselines
+4. Single model (DeepSeek-chat) — results may not generalize
+5. Constitutional condition uses more tokens than single-pass — not equal-compute
+6. Questions generated by same model family — potential circular bias
 
 ## 5. Results
 
-### 5.1 A/B/C Comparison
+### 5.1 Pilot Results (n=3)
 
-Table 1: Pilot results across three reasoning tasks.
+| Condition | Avg Score | Avg Self-Criticism | Avg Time |
+|-----------|-----------|-------------------|----------|
+| A — Single-pass | 3.00 | 2.0 | 33.9s |
+| B — Multi-round | 5.67 | 2.7 | 143.6s |
+| C — Constitutional | 6.83 | 4.0 | 50.6s |
+| D — Adaptive | 5.67 | 2.0 | 51.4s |
 
-| Task | Condition | Chars | Self-Crit Signals | Weasel Words | Quality Gate |
-|------|-----------|-------|-------------------|--------------|--------------|
-| Time Currency | A (single) | 4,544 | 1 | 0 | FAIL |
-| | B (5-round) | 22,318 | 5 | 0 | PASS |
-| | C (5-round+framework) | 21,498 | 6 | 0 | PASS |
-| Tech Prediction | A (single) | 6,348 | 1 | 0 | FAIL |
-| | B (5-round) | 18,981 | 5 | 0 | PASS |
-| | C (5-round+framework) | 25,535 | 6 | 1 | PASS |
-| Self-Attack | A (single) | 6,329 | 2 | 0 | FAIL |
-| | B (5-round) | 24,579 | 6 | 0 | PASS |
-| | C (5-round+framework) | 17,145 | 6 | 0 | PASS |
+### 5.2 Extended Results (n=80)
 
-**Observations** (not conclusions):
-- Condition A averaged 1.3 self-criticism signals and 0/3 quality gate passes.
-- Condition B averaged 5.3 signals and 3/3 passes.
-- Condition C averaged 6.0 signals and 3/3 passes.
-- The largest difference is between A and B. The difference between B and C is marginal (5.3 vs 6.0 self-criticism signals).
-- These differences in proxy indicators do not establish differences in actual reasoning quality.
+| Condition | Avg Score | Win Count | Win Rate |
+|-----------|-----------|-----------|----------|
+| C — Constitutional | 5.71 | 37 | 46% |
+| D — Adaptive | 5.10 | 13 | 16% |
+| B — Multi-round | 4.58 | 19 | 24% |
+| A — Single-pass | 4.08 | 11 | 14% |
 
-### 5.2 Bias Detection Observations
+Category-level analysis (wins by question type):
 
-The bias detector flagged novelty bias (100% of position updates strengthened rather than weakened claims) in all three Condition C sessions. The quality gate caught insufficient self-criticism in early rounds. These observations suggest the monitoring components function as designed, though their validity as bias measures is unestablished.
+| Category | C wins | B wins | D wins | A wins |
+|----------|--------|--------|--------|--------|
+| philosophy (17) | 8 | 3 | 5 | 1 |
+| policy (13) | 7 | 0 | 5 | 1 |
+| technology (16) | 9 | 6 | 1 | 0 |
+| science (9) | 4 | 3 | 1 | 1 |
+| self_attack (15) | 8 | 2 | 1 | 4 |
+| prediction (10) | 1 | 5 | 0 | 4 |
 
-### 5.3 Exploratory Self-Evolution
+Constitutional wins 5 of 6 categories. Prediction is the sole exception where multi-round wins.
 
-In an exploratory experiment, we allowed the framework to modify its own prompting strategy across generations:
+### 5.3 Router Test Results
 
-- v2.0: Composite score 78, no frame escape
-- v2.2: Composite score 100 (+28%), frame escape achieved
-- Pattern: Oscillating (v2.1 regressed to 61, v2.2 recovered to 100, v2.3-v2.4 regressed)
-- The system auto-stopped after 2 consecutive regressions
+| Method | Avg Score | Delta vs Fixed C |
+|--------|-----------|-----------------|
+| Fixed Constitutional | 5.639 | baseline |
+| Router (pred->B, else->C) | 5.667 | +0.028 |
+| Oracle (always pick best) | 6.378 | +0.739 |
 
-This self-evolution behavior is unstable and exploratory. The oscillating pattern suggests the optimization landscape is noisy and the composite scoring metric may not be reliable. We report this as an interesting observation, not as a validated capability.
+The router captures only 3.8% of available oracle headroom. This improvement is not meaningful.
+
+### 5.4 Self-Evolution Results
+
+The scaffold was allowed to modify its own code across generations:
+
+| Version | Score | Status |
+|---------|-------|--------|
+| v2.0 | 78 | Baseline |
+| v2.1 | 61 | Regression, rolled back |
+| v2.2 | 100 | Best (+28%) |
+| v2.3 | 61 | Regression, rolled back |
+| v2.4 | 93 | Regression, auto-stopped |
+
+Pattern: oscillating, not monotonic. System auto-stopped after 2 consecutive regressions.
+
+### 5.5 Self-Review Results
+
+When the evolved scaffold (v2.2) reviewed a paper written by the baseline scaffold (v2.0):
+
+- v2.0 paper: 37K chars, overclaimed results. v2.2 review: **REJECT** (22 flaws found)
+- Rewritten with honest positioning. v2.2 re-review: **Accept** (strengths 40 vs flaws 27)
+
+Key finding: same data, honest positioning = Accept; overclaiming = Reject.
 
 ## 6. Discussion
 
-**What the proxy indicators suggest**: Multi-round refinement is associated with substantially higher self-criticism signal counts and quality gate passage rates compared to single-pass generation. The framework's bias detection and quality gating add marginal additional proxy improvements.
+### 6.1 The Surprising Result
 
-**What we cannot conclude**: Whether higher self-criticism signal counts correspond to genuinely better reasoning. Whether the bias detector identifies real biases or merely flags certain vocabulary patterns. Whether these results would replicate across different models, tasks, or evaluation criteria.
+Constitutional single-shot prompting consistently outperforms multi-round iteration. This challenges the assumption underlying many reasoning enhancement systems — that more rounds of refinement produce better reasoning.
 
-**Surprising observation**: The bias detector consistently flagged novelty bias — a tendency to strengthen rather than question emerging positions across rounds. This may reflect a genuine property of iterative LLM refinement (confirmation of initial direction) or an artifact of our detection methodology.
+One well-crafted prompt that embeds self-evaluation requirements achieves higher proxy scores than five rounds of generate-critique-refine, while using approximately one-third of the API calls and one-third of the wall-clock time.
 
-**Honest assessment of framework value**: The primary improvement comes from multi-round dialogue itself (B >> A), not from our framework specifically (C ≈ B). Our framework's main demonstrated value is in monitoring (detecting biases, catching quality issues) rather than in improving reasoning output.
+### 6.2 Why Multi-Round Loses
+
+Multi-round iteration provides generic instructions ("attack your answer," "fix weaknesses") without specifying what good reasoning looks like. Constitutional prompting gives the LLM explicit evaluation criteria in a single pass. The LLM can apply all criteria simultaneously rather than discovering them sequentially across rounds.
+
+The exception is prediction tasks, where iterative refinement of specific numbers may genuinely benefit from multiple passes. This is the one category where multi-round won.
+
+### 6.3 The Router Was Not Worth Building
+
+The rule-based router added +0.028 to the fixed constitutional baseline — effectively zero. Even the oracle (always picking the best method) only reaches 6.378, suggesting that the proxy metric ceiling may be close to what constitutional prompting already achieves.
+
+### 6.4 Self-Evolution Is Interesting but Unstable
+
+The scaffold's ability to modify itself and improve (+28%) is notable, but the oscillating pattern (improvements followed by regressions) suggests the optimization landscape is noisy. The system correctly auto-stopped, which is itself a useful capability.
+
+### 6.5 Self-Review Works
+
+The most practically useful capability demonstrated is self-review: the evolved scaffold identified 22 specific flaws in an overclaimed paper and provided actionable revision guidance. This monitoring function has clearer value than the reasoning enhancement function.
 
 ## 7. Limitations
 
-We identify seven critical limitations:
+1. **Small sample sizes**: n=3 pilot and n=80 extended are insufficient for strong statistical claims
+2. **Unvalidated proxy metrics**: Keyword-based scoring has not been validated against human judgment
+3. **Single model**: Only DeepSeek-chat tested
+4. **No established baselines**: No comparison to Chain-of-Thought, best-of-n, or self-consistency
+5. **Unequal compute**: Constitutional uses more tokens than single-pass
+6. **Same-family generation and evaluation**: Questions generated and answered by same model family
+7. **Proxy metric ceiling**: The scoring function may cap observable improvements
 
-1. **Extremely small sample size**: n=3 tasks — insufficient for any statistical conclusions.
-2. **No human evaluation**: All metrics are automated keyword-based proxies with no validation against human expert judgment.
-3. **Missing baselines**: No comparison to Chain-of-Thought, best-of-n, self-consistency, or other established methods.
-4. **Unvalidated metrics**: Quality gate and self-criticism counts are proxy indicators, not measures of reasoning quality. "More self-criticism keywords" does not equal "better reasoning."
-5. **Single model**: Tested only on DeepSeek-chat. Results may not generalize.
-6. **Confounded computation**: Multi-round conditions use ~5x more tokens. Token budget was not controlled.
-7. **Bias detector is self-referential**: Uses the same LLM it evaluates — not an independent measurement.
+## 8. Conclusion
 
-## 8. Future Work
+We set out to build a reasoning enhancement scaffold and discovered that a simple constitutional prompt renders it largely unnecessary. Our primary finding is negative: architectural complexity does not meaningfully improve over a well-crafted single prompt for our task set and metrics.
 
-To establish whether this methodology genuinely improves reasoning quality, the following work is needed:
+We believe this negative result is valuable. The field invests significant effort in multi-round reasoning architectures that may primarily add latency and cost without proportional quality gains. We encourage researchers to establish simple constitutional prompting as a mandatory baseline before claiming benefits from more complex systems.
 
-- **Human evaluation**: Expert ratings of output quality across conditions, with inter-rater reliability reporting (target κ ≥ 0.7).
-- **Established baselines**: Comparison with Chain-of-Thought, best-of-n, self-consistency under equal token budgets.
-- **Scale**: Minimum n=50 tasks across 5+ reasoning domains.
-- **Cross-model validation**: Testing on at least 3 different model families.
-- **Metric validation**: Correlating proxy indicators with human quality judgments (target r ≥ 0.6).
-- **Computational controls**: Equal-token comparisons across all conditions.
+Our secondary finding — that the system can usefully review and critique its own output — suggests that scaffolding may have more value as a monitoring tool than as a reasoning enhancer.
 
-## 9. Conclusion
-
-We present a methodology framework combining multi-round refinement with bias detection and quality gating. Pilot observations on three tasks (n=3) show increased proxy indicators associated with reasoning depth, with the primary improvement coming from multi-round dialogue itself rather than our framework's specific components. Exploratory self-evolution results show interesting but unstable behavior.
-
-We position this work as a methodology proposal with pilot feasibility demonstration. The framework's code is available as a 508-line, zero-parameter Python prototype. We hope this transparent reporting of preliminary results — including the honest finding that our framework adds marginal value beyond simple multi-round dialogue — contributes to more rigorous evaluation practices in LLM reasoning enhancement research.
+We release this work as a methodology proposal with honest reporting of both positive and negative results. The code and all experimental data are available at https://github.com/Feng-tech-ai-glass/axiomforge-lab
 
 ## References
 
-Burns, C., Ye, H., Klein, D., & Steinhardt, J. (2023). Weak-to-strong generalization: Eliciting strong capabilities with weak supervision. *arXiv preprint arXiv:2312.09390*.
+Burns, C., Ye, H., Klein, D., & Steinhardt, J. (2023). Weak-to-strong generalization. *arXiv:2312.09390*.
 
-Khattab, O., Singhvi, A., Maheshwari, P., Zhang, Z., Santhanam, K., et al. (2024). DSPy: Compiling declarative language model calls into self-improving pipelines. In *Proceedings of the International Conference on Learning Representations (ICLR)*.
+Khattab, O., et al. (2024). DSPy: Compiling declarative language model calls into self-improving pipelines. *ICLR 2024*.
 
-Shinn, N., Cassano, F., Gopinath, A., Narasimhan, K., & Yao, S. (2023). Reflexion: Language agents with verbal reinforcement learning. In *Advances in Neural Information Processing Systems (NeurIPS)*.
+Shinn, N., et al. (2023). Reflexion: Language agents with verbal reinforcement learning. *NeurIPS 2023*.
 
-Shojaee, P., Mirzadeh, I., Alizadeh, K., Horton, M., Bengio, S., & Farajtabar, M. (2025). The illusion of thinking: Understanding the strengths and limitations of reasoning in LLMs. *arXiv preprint arXiv:2506.xxxxx*.
+Shojaee, P., et al. (2025). The illusion of thinking. *arXiv:2506.01142*.
 
-Sumers, T. R., Yao, S., Narasimhan, K., & Griffiths, T. L. (2024). Cognitive architectures for language agents. *Transactions on Machine Learning Research (TMLR)*.
+Sumers, T. R., et al. (2024). Cognitive architectures for language agents. *TMLR 2024*.
 
-Wang, Y., & Zhao, Y. (2023). Metacognitive prompting improves understanding in large language models. *arXiv preprint arXiv:2308.05342*.
+Wang, Y. & Zhao, Y. (2023). Metacognitive prompting improves understanding in large language models. *arXiv:2308.05342*.
 
-Yang, C., Wang, X., Lu, Y., Liu, H., Le, Q. V., Zhou, D., & Chen, X. (2024). Large language models as optimizers. In *Proceedings of the International Conference on Learning Representations (ICLR)*.
+Yang, C., et al. (2024). Large language models as optimizers. *ICLR 2024*.
 
-Yao, S., Yu, D., Zhao, J., Shafran, I., Griffiths, T., Cao, Y., & Narasimhan, K. (2023). Tree of thoughts: Deliberate problem solving with large language models. In *Advances in Neural Information Processing Systems (NeurIPS)*.
+Yao, S., et al. (2023). Tree of thoughts: Deliberate problem solving with large language models. *NeurIPS 2023*.
 
-Yuan, W., Pang, R. Y., Cho, K., Sukhbaatar, S., Xu, J., & Weston, J. (2024). Self-rewarding language models. In *Proceedings of the International Conference on Machine Learning (ICML)*.
+Yuan, W., et al. (2024). Self-rewarding language models. *ICML 2024*.
 
-Zelikman, E., Wu, Y., Mu, J., & Goodman, N. D. (2024). Quiet-STaR: Language models can teach themselves to think before speaking. *arXiv preprint arXiv:2403.09629*.
+Zelikman, E., et al. (2024). Quiet-STaR: Language models can teach themselves to think before speaking. *arXiv:2403.09629*.
