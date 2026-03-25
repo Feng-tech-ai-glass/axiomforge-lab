@@ -120,6 +120,26 @@ Constitutional wins 5 of 6 categories. Prediction is the sole exception where mu
 
 The router captures only 3.8% of available oracle headroom. This improvement is not meaningful.
 
+### 5.4 Model Routing Results (C1 Experiment)
+
+While strategy routing failed, model routing succeeded. We tested routing between Claude (expensive, ~$0.015/question) and DeepSeek (cheap, ~$0.0004/question) — a 35x cost difference.
+
+Phase 1 (50 questions, both models): Claude averaged 6.47, DeepSeek averaged 6.00 (gap +0.47). Critically, DeepSeek was sufficient (within 1 point of Claude) on 68% of questions. On philosophy questions, DeepSeek actually outperformed Claude (gap -0.64).
+
+Learned routing rules: DeepSeek for philosophy/prediction/self_attack; Claude for technology/science/policy.
+
+Phase 3 validation (30 new questions):
+
+| Metric | Claude-Only | Router (Mixed) |
+|--------|------------|----------------|
+| Avg Score | 6.05 | **6.63** |
+| Cost | $0.42 | **$0.20** |
+| Cost Saving | — | **52%** |
+
+The router not only saved 52% cost but scored higher than Claude-only (+0.58), because DeepSeek outperformed Claude on certain question types. This is the first experiment in our series to pass both validation criteria (quality >= 95%, cost saving >= 40%).
+
+Key insight: strategy routing failed because strategy differences were too small (~1 point). Model routing succeeded because model differences were large enough (~3-5 points on some questions) and direction-dependent (neither model universally dominates).
+
 ### 5.4 Level 2: Semantic Router Results
 
 We tested whether LLM-based semantic classification (instead of keyword matching) could improve routing. The LLM classified each question by type, difficulty, and requirements, then dynamically compiled a customized constitutional prompt.
